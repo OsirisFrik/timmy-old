@@ -1,15 +1,9 @@
 require('dotenv').config()
+require('./firebase')
 
 const express = require('express')
-const firebase = require('firebase-admin')
 
 const app = express()
-
-firebase.initializeApp({
-  credential: firebase.credential.applicationDefault(),
-  databaseURL: process.env.DATABASE,
-  storageBucket: process.env.BUCKET
-})
 
 app.get('/', (req, res) => res.send(true))
 

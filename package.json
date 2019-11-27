@@ -4,7 +4,7 @@
   "description": "Discord bot to random features",
   "main": "server.js",
   "scripts": {
-    "test": "test.js",
+    "test": "jest",
     "dev": "nodemon --inspect=3001 server.js",
     "start": "node server.js"
   },
@@ -30,5 +30,8 @@
     "firebase-admin": "^8.8.0",
     "lodash": "^4.17.15",
     "require-context": "^1.1.0"
+  },
+  "devDependencies": {
+    "jest": "^24.9.0"
   }
 }
