@@ -1,5 +1,5 @@
 # Timmy
-
+![build](https://travis-ci.com/OsirisFrik/timmy.svg?branch=master)
 This is a discord bot to random features...
 
 ## Install
