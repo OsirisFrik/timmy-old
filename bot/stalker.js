@@ -81,6 +81,7 @@ class Stalker {
       })
       this.client.user.setActivity(null)
       this.disconnect(true)
+      this.removeMessage(message)
     } catch (err) {
       console.trace(err)      
     }
@@ -107,6 +108,7 @@ class Stalker {
       })
       this.userToStalk = user
       this.initStalk()
+      this.removeMessage(message)
     }
   }
 
@@ -117,6 +119,7 @@ class Stalker {
 
   $$leave(message) {
     this.disconnect()
+    this.removeMessage(message)
   }
 
   async initStalk() {
@@ -174,6 +177,17 @@ class Stalker {
         console.trace(err)
       }
     })
+  }
+
+  /**
+   * @method removeMessage
+   * @param { Message } message
+   */
+
+  removeMessage(message) {
+    setTimeout(() => {
+      message.delete()
+    }, 500);
   }
 }
 
