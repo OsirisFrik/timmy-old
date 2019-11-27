@@ -125,7 +125,7 @@ class Stalker {
   async initStalk() {
     try {
       this.client.user
-        .setActivity(`@$${this.userToStalk.username}`, {
+        .setActivity(`@${this.userToStalk.username}`, {
           type: 'WATCHING'
         })
       await this.checkConnection(this.userToStalk.id)
