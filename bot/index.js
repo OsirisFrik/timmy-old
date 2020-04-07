@@ -1,4 +1,5 @@
 require('colors')
+const debug = require('debug')('app:bot')
 const _ = require('lodash')
 const firebase = require('firebase-admin')
 const { Client } = require('discord.js')
@@ -13,7 +14,7 @@ if (process.env.NODE_ENV === 'development') client.on('debug', info => console.l
 
 commands.init(client)
 client.on('ready', async () => {
-  console.log('BOT READY!'.green)
+  debug('BOT READY!'.green)
   await checkGuilds()
 })
 

@@ -26,8 +26,8 @@ const modules = []
 function init(client) {
   files.keys().forEach(file => {
     if (['index.js', 'commands.js'].includes(file)) return
-    let name = file.replace(/(\.\/|\.js)/g, '')
-    modules.push(new (files(file))(client))
+    let _file = new (files(file))(client)
+    modules.push(_file)
   })
 }
 
