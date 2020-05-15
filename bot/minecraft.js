@@ -34,11 +34,11 @@ class MinecraftBot {
 
   constructor(client) {
     this.commands = [
-      'mc_settings',
-      'mc_ip',
-      'mc_status',
-      'mc_start',
-      'mc_channel'
+      '$$mcsettings',
+      '$$mchost',
+      '$$mcstatus',
+      '$$mcstart',
+      '$$mcchannel'
     ]
     this.client = client
     this.client.on('ready', () => this.init())
@@ -73,7 +73,7 @@ class MinecraftBot {
           if (mcSettings.autoStart && mcSettings.channel) {
             debug(mcSettings)
             guildsMcSettings[guild.id].channel = this.client.channels.get(mcSettings.channel)
-            this.mc_start(null, guild.id)
+            this.$$mcstart(null, guild.id)
           }
         } else {
           debug('HERE')
@@ -96,21 +96,21 @@ class MinecraftBot {
    * @method onCommand
    * @param { Message } message
    */
-  onCommand(message) {
+  onCommand(message, command) {
     try {
-      let command = message.content.split(' ')[0]
       debug(`command ${(command).magenta} by ${message.author.username.cyan}`)
       this[command](message)
     } catch (err) {
+      err.command = command
       throw err
     }
   }
 
   /**
-   * @method mc_channel
+   * @method $$mcchannel
    * @param { Message } message
    */
-  async mc_channel(message) {
+  async $$mcchannel(message) {
     try {
       let channel = message.channel
       let settings = guildsMcSettings[message.guild.id]
@@ -131,35 +131,47 @@ class MinecraftBot {
   }
 
   /**
-   * @method mc_start
+   * @method $$mcstart
    * @param { Message } message
    * @param { String } guild
    */
-  async mc_start(message, guild) {
+  async $$mcstart(message, guild) {
     try {
-      debug('mc_start')
+      debug('$$mcstart')
       let msg
       if (!ngrokServer) {
         ngrokServer = {
           id: null,
           server: await ngrok.connect({
             proto: 'tcp',
-            addr: 25565,
+            addr: process.env.$$MCPORT,
             authtoken: process.env.NGROK_TOKEN
           }),
           api: ngrok.getApi()
         }
         
         if (!message) {
-          msg = await guildsMcSettings[guild].channel.send(`Server host ${ngrokServer.server}`)
+          msg = await guildsMcSettings[guild].channel.send(`Server host \`${ngrokServer.server.replace('tcp://', '')}\``)
         } else {
-          msg = await message.channel.send(`Server host ${ngrokServer.server}`)
+          msg = await message.channel.send(`Server host \`${ngrokServer.server.replace('tcp://', '')}\``)
         }
 
         ngrokServer.id = msg.id
       }
     } catch (err) {
       throw err
+    }
+  }
+
+  /**
+   * @method $$mchost
+   * @param { Message } message
+   */
+  async $$mchost(message) {
+    if (ngrokServer) {
+      message.channel.send(`Server host on \`${ngrokServer.server.replace('tcp://', '')}\``)
+    } else {
+      message.channel.send(`Server host is offline`)
     }
   }
 }
