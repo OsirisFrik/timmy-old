@@ -144,7 +144,7 @@ class MinecraftBot {
           id: null,
           server: await ngrok.connect({
             proto: 'tcp',
-            addr: process.env.$$MCPORT,
+            addr: process.env.MC_PORT,
             authtoken: process.env.NGROK_TOKEN
           }),
           api: ngrok.getApi()
