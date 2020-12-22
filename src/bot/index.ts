@@ -1,0 +1,72 @@
+import Debug from 'debug'
+import _ from 'lodash'
+import firebase from 'firebase-admin'
+import { Client } from 'discord.js'
+
+import env from '../config'
+import Commands from './commands'
+
+const fstore = firebase.firestore()
+const debug = Debug('app:bot')
+
+class Bot {
+  public client: Client = new Client()
+  public commands: Commands
+
+  private guilds = new Map<string, any>()
+
+  constructor() {
+    this.client.login(env.DISCORD)
+
+    this.commands = new Commands(this.client)
+    this.client.on('ready', () => this.config())
+  }
+
+  async config() {
+    if (env.NODE_ENV === 'development') this.client.on('debug', (info) => console.log(info))
+
+    await this.checkGuilds()
+
+    this.client.on('message', (message) => this.commands.onMessage(message))
+  }
+
+  async checkGuilds() {
+    try {
+      let storageGuilds = await fstore.collection('guilds').listDocuments()
+
+      this.client.guilds.cache.forEach(async (guild) => {
+        let exists = _.findIndex(storageGuilds, (item) => item.id === guild.id)
+
+        if (exists === -1) {
+          let _guild: GuildStore = {
+            id: guild.id,
+            name: guild.name,
+            ownerId: guild.ownerID,
+            user: {
+              id: guild.owner?.user.id,
+              username: guild.owner?.user.username,
+              tag: guild.owner?.user.tag,
+              avatar: guild.owner?.user.discriminator
+            }
+          }
+
+          await fstore.collection('guilds')
+            .doc(guild.id)
+            .set(_guild)
+
+          this.guilds.set(guild.id, _guild)
+        } else {
+          let _guild = await fstore.collection('guilds').doc(guild.id).get()
+
+          this.guilds.set(guild.id, _guild)
+        }
+      })
+
+      return
+    } catch (err) {
+      console.trace(err)
+    }
+  }
+}
+
+export default new Bot()

@@ -52,7 +52,7 @@ function onMessage(message) {
   } catch (err) {
     message.channel.send(`I don't can find command ${err.command}`)
     err.message = err.message.replace('command', `'${err.command}'`)
-    console.log(err.message)
+    
     Sentry.captureException(err)
   }
 }
