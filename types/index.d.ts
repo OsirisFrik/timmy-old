@@ -41,3 +41,14 @@ interface UserStalk {
   discriminator: string
   avatar: string | null
 }
+
+interface MinecraftSettings {
+  autoStart: Boolean
+  channel: string
+}
+
+
+interface NgrokServer {
+  id: null | string
+  server: null | string
+}

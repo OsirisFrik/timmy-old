@@ -14,6 +14,8 @@ class Commands extends EventEmitter {
   constructor(client: Client) {
     super()
 
+    debug('start import moduls')
+
     files.keys().forEach(async (file: any) => {
       if (['index.ts', 'commands.ts', 'main.ts'].includes(file)) return
   
@@ -30,6 +32,8 @@ class Commands extends EventEmitter {
         console.trace(err)
       }
     })
+    
+    debug('end import modules')
   }
 
   onMessage(message: Message): void {

@@ -1,5 +1,5 @@
 import Debug from 'debug'
-import { Client, Message, VoiceChannel, Channel } from 'discord.js';
+import { Client, Message, VoiceChannel, Channel, TextChannel } from 'discord.js';
 
 const debug = Debug('app:bot:main')
 
@@ -42,12 +42,25 @@ class MainBot {
     }
   }
 
-  isChannelVoice(channel: Channel): channel is VoiceChannel {
+  isVoiceCannel(channel: Channel): channel is VoiceChannel {
     return channel.type === 'voice'
+  }
+  
+  isTextChannel(channel: any): channel is TextChannel {
+    return Object.keys(channel).includes('type')
   }
 
   joinVoice(): void {
     if (this.voiceChannel && this.voiceChannel.joinable) this.voiceChannel.join()
+  }
+
+  async messageToChannel(channelId: string, message: string) {
+    const channel = this.client.channels.cache.get(channelId)
+
+    if (this.isTextChannel(channel)) {
+      return channel.send(message)
+    } else throw new Error('invalid channel');
+    
   }
 }
 
