@@ -6,11 +6,11 @@ import { EventEmitter } from 'events'
 import Debug from 'debug'
 import path from 'path'
 
-const debug = Debug('app:bot:commands')
-const dir = path.join(__dirname, './modules')
+const debug = Debug('app:bot:modules')
+const dir = path.join(__dirname)
 const files = context(dir, true, /\.(t|j)s$/)
 
-class Commands extends EventEmitter {
+class Modules extends EventEmitter {
   public modules: BotModule[] = []
 
   constructor(client: Client) {
@@ -19,12 +19,13 @@ class Commands extends EventEmitter {
     debug('start import moduls')
 
     files.keys().forEach(async (file: any) => {
-      if (['index', 'commands', 'main'].includes(file)) return
+      const moduleName = file.split('.')[0]
+
+      if (['index'].includes(moduleName)) return
 
       try {
         debug(file)
-        const BotModule = require(`./modules/${file}`).default
-        const moduleName = file.split('.')[0]
+        const BotModule = require(`./${file}`).default
 
         if (BotModule) {
           this.modules.push(new BotModule(client))
@@ -66,4 +67,4 @@ class Commands extends EventEmitter {
   }
 }
 
-export default Commands
+export default Modules

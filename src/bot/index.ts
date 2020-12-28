@@ -4,14 +4,14 @@ import firebase from 'firebase-admin'
 import { Client } from 'discord.js'
 
 import env from '../config'
-import Commands from './commands'
+import Modules from './modules'
 
 const fstore = firebase.firestore()
 const debug = Debug('app:bot')
 
 class Bot {
   public client: Client = new Client()
-  public commands: Commands
+  public commands: Modules
 
   private guilds = new Map<string, GuildStore>()
 
@@ -20,7 +20,7 @@ class Bot {
 
     this.client.login(env.DISCORD)
 
-    this.commands = new Commands(this.client)
+    this.commands = new Modules(this.client)
     this.client.on('ready', () => this.config())
   }
 
