@@ -5,9 +5,9 @@ This is a discord bot to random features...
 ## Install
 
 ```bash
-$ yarn install
+yarn install
 ## or
-$ npm install
+npm install
 ```
 ## ENV
 
@@ -25,42 +25,54 @@ DISCORD =
 ### dev
 
 ```bash
-$ yarn dev
+yarn dev
 ## or
-$ npm run dev
+npm run dev
 ```
 
 ### prod
 
 ```bash
-$ yarn start
+yarn start
 ## or
-$ npm start
+npm start
 ```
 
 ### test
 
 ```bash
-$ yarn test
+yarn test
 ## or
-$ npm run test
+npm run test
 ```
 
-## Add feature
+## Add module
 
-Create file in `bot/<name>.js`
+Create file in `bot/modules/<name>.ts`
 
 ### structure
 
-```js
+```ts
+import { Client, Message } from 'discord.js'
+import MainBot from '../main'
 
-class NAME {
-  constructor(client) {
-    this.client = client
-    this.commands = [String]
+class ModuleName extends MainBot {
+  public commands: string[] = [
+    '$$example',
+    ...
+  ]
+
+  constructor(client: Client) {
+    super(client)
+    
+    this.client.on('ready', () => this.init())
   }
 
-  onCommand(message) {
+  async init(): Promise<void> {
+    ...
+  }
+
+  $$example(message: Message): Promise<void> {
     ...
   }
 }
