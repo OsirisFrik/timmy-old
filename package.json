@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "dev": "nodemon --inspect=3001 src/index.ts",
-    "start": "node server.js"
+    "start": "node dist/index.js",
+    "build": "eslint ./src && tsc -p ."
   },
   "repository": "git+https://github.com/OsirisFrik/timmy.git",
   "keywords": [

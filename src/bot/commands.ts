@@ -4,9 +4,11 @@ import * as Sentry from '@sentry/node'
 import { Client, Message } from 'discord.js'
 import { EventEmitter } from 'events'
 import Debug from 'debug'
+import path from 'path'
 
 const debug = Debug('app:bot:commands')
-const files = context('../../src/bot/modules', true, /\.ts$/)
+const dir = path.join(__dirname, './modules')
+const files = context(dir, true, /\.(t|j)s$/)
 
 class Commands extends EventEmitter {
   public modules: BotModule[] = []
@@ -17,9 +19,10 @@ class Commands extends EventEmitter {
     debug('start import moduls')
 
     files.keys().forEach(async (file: any) => {
-      if (['index.ts', 'commands.ts', 'main.ts'].includes(file)) return
+      if (['index', 'commands', 'main'].includes(file)) return
 
       try {
+        debug(file)
         const BotModule = require(`./modules/${file}`).default
         const moduleName = file.split('.')[0]
 

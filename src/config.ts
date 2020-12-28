@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-process-env
 const ENV = process.env
 
 const env: IENV = {
