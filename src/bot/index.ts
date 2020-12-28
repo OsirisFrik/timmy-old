@@ -13,9 +13,11 @@ class Bot {
   public client: Client = new Client()
   public commands: Commands
 
-  private guilds = new Map<string, any>()
+  private guilds = new Map<string, GuildStore>()
 
   constructor() {
+    debug('Start bot')
+
     this.client.login(env.DISCORD)
 
     this.commands = new Commands(this.client)
@@ -32,13 +34,13 @@ class Bot {
 
   async checkGuilds() {
     try {
-      let storageGuilds = await fstore.collection('guilds').listDocuments()
+      const storageGuilds = await fstore.collection('guilds').listDocuments()
 
       this.client.guilds.cache.forEach(async (guild) => {
-        let exists = _.findIndex(storageGuilds, (item) => item.id === guild.id)
+        const exists = _.findIndex(storageGuilds, (item) => item.id === guild.id)
 
         if (exists === -1) {
-          let _guild: GuildStore = {
+          const _guild: GuildStore = {
             id: guild.id,
             name: guild.name,
             ownerId: guild.ownerID,
@@ -56,7 +58,10 @@ class Bot {
 
           this.guilds.set(guild.id, _guild)
         } else {
-          let _guild = await fstore.collection('guilds').doc(guild.id).get()
+          // @ts-expect-error
+          const _guild: GuildStore = await fstore.collection('guilds')
+            .doc(guild.id)
+            .get()
 
           this.guilds.set(guild.id, _guild)
         }

@@ -6,7 +6,7 @@ import Debug from 'debug'
 import * as Sentry from '@sentry/node'
 import { EventEmitter } from 'events'
 
-import env from './config';
+import env from './config'
 
 Sentry.init({
   dsn: env.SENTRY,
@@ -14,6 +14,7 @@ Sentry.init({
 })
 
 const debug = Debug('app:server')
+
 debug.log = console.log.bind(console)
 
 class Server extends EventEmitter {
@@ -52,7 +53,7 @@ class Server extends EventEmitter {
 
   ready(status: Boolean) {
     if (this.listenerCount('ready') > 0) this.emit('ready', status)
-    else setTimeout(() => this.ready(status), 500);
+    else setTimeout(() => this.ready(status), 500)
   }
 
   start() {

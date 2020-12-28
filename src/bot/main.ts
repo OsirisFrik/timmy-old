@@ -1,5 +1,5 @@
 import Debug from 'debug'
-import { Client, Message, VoiceChannel, Channel, TextChannel } from 'discord.js';
+import { Client, Message, VoiceChannel, Channel, TextChannel } from 'discord.js'
 
 const debug = Debug('app:bot:main')
 
@@ -22,7 +22,7 @@ class MainBot {
       else throw new Error('command not found')
     } catch (err) {
       if (err.message === 'command not found') {
-        err.command =  message.content.split(' ')[0]
+        err.command = message.content.split(' ')[0]
       }
 
       throw err
@@ -45,8 +45,8 @@ class MainBot {
   isVoiceCannel(channel: Channel): channel is VoiceChannel {
     return channel.type === 'voice'
   }
-  
-  isTextChannel(channel: any): channel is TextChannel {
+
+  isTextChannel(channel: Channel | any): channel is TextChannel {
     return Object.keys(channel).includes('type')
   }
 
@@ -54,13 +54,12 @@ class MainBot {
     if (this.voiceChannel && this.voiceChannel.joinable) this.voiceChannel.join()
   }
 
-  async messageToChannel(channelId: string, message: string) {
+  async messageToChannel(channelId: string, message: string): Promise<Message> {
     const channel = this.client.channels.cache.get(channelId)
 
     if (this.isTextChannel(channel)) {
       return channel.send(message)
-    } else throw new Error('invalid channel');
-    
+    } else throw new Error('invalid channel')
   }
 }
 

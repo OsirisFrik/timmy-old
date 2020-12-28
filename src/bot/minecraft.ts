@@ -27,7 +27,7 @@ class MinecraftBot extends MainBot {
   constructor(client: Client) {
     super(client)
 
-    this.init()
+    this.client.on('ready', () => this.init())
   }
 
   get host(): string {
@@ -44,6 +44,8 @@ class MinecraftBot extends MainBot {
 
       const guildsSettings = await db.listDocuments()
       const guildsIds = this.client.guilds.cache.keyArray()
+
+      console.log(this.client.guilds.cache.size)
 
       for (let i = 0; i < guildsIds.length; i++) {
         const guild = this.client.guilds.cache.get(guildsIds[i])
@@ -129,12 +131,14 @@ class MinecraftBot extends MainBot {
 
       if (mentions.channels.size > 0) {
         mentions.channels.forEach((cha) => {
-          if (this.isTextChannel(cha) && !channel) channel = cha
+          if (this.isTextChannel(cha) && (!channel || channel.id !== cha.id)) channel = cha
         })
       }
 
       if (message.guild && channel) {
         const guild = this.guilds.get(message.guild.id)
+
+        debug(guild, message.guild.id, this.guilds.keys())
 
         if (!guild) throw new Error('Guild not found')
 

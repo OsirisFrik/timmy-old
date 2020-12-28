@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 declare namespace NodeJS {
   interface Global {
     client: import('discord.js').Client
@@ -15,10 +16,9 @@ interface IENV {
   DISCORD: string
 }
 
-
-interface Bot {
- commands: string[] 
- onCommand(message: import('discord.js').Message, command?: string): void
+declare interface Bot {
+  commands: string[]
+  onCommand(message: import('discord.js').Message, command?: string): void
 }
 
 interface GuildStore {

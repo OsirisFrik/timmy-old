@@ -18,21 +18,21 @@ class Commands extends EventEmitter {
 
     files.keys().forEach(async (file: any) => {
       if (['index.ts', 'commands.ts', 'main.ts'].includes(file)) return
-  
-      try {
-        const module = require(`./${file}`).default
-        
-        if (module) {
-          this.modules.push(new module(client))
 
-          debug(`Module ${file.split('.')[0].green} loaded`)
-        }
-        else debug(`Module ${file.split('.')[0].red} not export class`)
+      try {
+        const BotModule = require(`./${file}`).default
+        const moduleName = file.split('.')[0]
+
+        if (BotModule) {
+          this.modules.push(new BotModule(client))
+
+          debug(`Module ${moduleName.green} loaded`)
+        } else debug(`Module ${moduleName.red} not export class`)
       } catch (err) {
         console.trace(err)
       }
     })
-    
+
     debug('end import modules')
   }
 
@@ -41,8 +41,8 @@ class Commands extends EventEmitter {
       if (!message.author.bot) {
         this.modules.forEach((option) => {
           for (let i = 0; i < option.commands.length; i++) {
-            const command = option.commands[i];
-            
+            const command = option.commands[i]
+
             if (message.content.startsWith(command)) {
               console.log(command)
 
@@ -55,7 +55,7 @@ class Commands extends EventEmitter {
     } catch (err) {
       message.channel.send(`I don't can find command ${err.command}`)
       err.message = err.message.replace('command', `'${err.command}'`)
-  
+
       debug(`Error on load command ${err.command.red}`)
 
       Sentry.captureException(err)
