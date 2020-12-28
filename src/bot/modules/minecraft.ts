@@ -3,8 +3,8 @@ import firebase from 'firebase-admin'
 import { Channel, Client, Message } from 'discord.js'
 import ngrok from 'ngrok'
 
-import MainBot from './main'
-import env from '../config'
+import MainBot from '../Bot'
+import env from '../../config'
 
 const debug = Debug('app:boot:mc')
 const firestore = firebase.firestore()
@@ -12,7 +12,7 @@ const db = firestore.collection('settings')
 
 class MinecraftBot extends MainBot {
   private guilds: Map<string, MinecraftSettings> = new Map()
-  private commands: string[] = [
+  public commands: string[] = [
     '$$mcsettings',
     '$$mchost',
     '$$mcstatus',
@@ -34,18 +34,12 @@ class MinecraftBot extends MainBot {
     return this.ngrokServer.server?.replace('tcp://', '') || ''
   }
 
-  static get commands(): string[] {
-    return this.commands
-  }
-
   async init(): Promise<void> {
     try {
       debug('init MC module')
 
       const guildsSettings = await db.listDocuments()
       const guildsIds = this.client.guilds.cache.keyArray()
-
-      console.log(this.client.guilds.cache.size)
 
       for (let i = 0; i < guildsIds.length; i++) {
         const guild = this.client.guilds.cache.get(guildsIds[i])

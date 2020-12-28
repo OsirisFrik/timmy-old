@@ -1,15 +1,15 @@
 import Debug from 'debug'
 import firebase from 'firebase-admin'
 import { Client, Message } from 'discord.js'
-import MainBot from './main'
+import MainBot from '../Bot'
 
 const debug = Debug('app:bot:stalker')
 const db = firebase.database().ref('stalk')
 
 class Stalker extends MainBot {
-  private userToStalk: UserStalk | null = null
-
   public stalking: Boolean = false
+
+  private userToStalk: UserStalk | null = null
   public commands: string[] = [
     '$$stalk',
     '$$leave',

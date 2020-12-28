@@ -6,10 +6,10 @@ import { EventEmitter } from 'events'
 import Debug from 'debug'
 
 const debug = Debug('app:bot:commands')
-const files = context('../../src/bot', true, /\.ts$/)
+const files = context('../../src/bot/modules', true, /\.ts$/)
 
 class Commands extends EventEmitter {
-  public modules: Bot[] = []
+  public modules: BotModule[] = []
 
   constructor(client: Client) {
     super()
@@ -20,7 +20,7 @@ class Commands extends EventEmitter {
       if (['index.ts', 'commands.ts', 'main.ts'].includes(file)) return
 
       try {
-        const BotModule = require(`./${file}`).default
+        const BotModule = require(`./modules/${file}`).default
         const moduleName = file.split('.')[0]
 
         if (BotModule) {

@@ -46,22 +46,33 @@ yarn test
 npm run test
 ```
 
-## Add feature
+## Add module
 
-Create file in `bot/<name>.ts`
+Create file in `bot/modules/<name>.ts`
 
 ### structure
 
 ```ts
-import MainBot from './main'
+import { Client, Message } from 'discord.js'
+import MainBot from '../main'
 
 class ModuleName extends MainBot {
-  constructor(client) {
-    this.client = client
-    this.commands = [String]
+  public commands: string[] = [
+    '$$example',
+    ...
+  ]
+
+  constructor(client: Client) {
+    super(client)
+    
+    this.client.on('ready', () => this.init())
   }
 
-  onCommand(message) {
+  async init(): Promise<void> {
+    ...
+  }
+
+  $$example(message: Message): Promise<void> {
     ...
   }
 }

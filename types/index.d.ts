@@ -16,9 +16,17 @@ interface IENV {
   DISCORD: string
 }
 
-declare interface Bot {
+interface MainBot {
   commands: string[]
+  client: Client
+  voiceChannel: VoiceChannel | null
+
   onCommand(message: import('discord.js').Message, command?: string): void
+}
+
+interface BotModule extends MainBot {
+  init(): Promise<void>
+  [key](message: import('discord.js').Message): Promise<void>
 }
 
 interface GuildStore {
