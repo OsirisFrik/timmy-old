@@ -1,7 +1,7 @@
 import Debug from 'debug'
 import _ from 'lodash'
 import firebase from 'firebase-admin'
-import { Client } from 'discord.js'
+import { Client, Intents } from 'discord.js'
 
 import env from '../config'
 import Modules from './modules'
@@ -10,7 +10,9 @@ const fstore = firebase.firestore()
 const debug = Debug('app:bot')
 
 class Bot {
-  public client: Client = new Client()
+  public client: Client = new Client({
+    intents: [Intents.FLAGS.GUILDS]
+  })
   public commands: Modules
 
   private guilds = new Map<string, GuildStore>()
@@ -43,13 +45,7 @@ class Bot {
           const _guild: GuildStore = {
             id: guild.id,
             name: guild.name,
-            ownerId: guild.ownerID,
-            user: {
-              id: guild.owner?.user.id,
-              username: guild.owner?.user.username,
-              tag: guild.owner?.user.tag,
-              avatar: guild.owner?.user.discriminator
-            }
+            ownerId: guild.ownerId
           }
 
           await fstore.collection('guilds')

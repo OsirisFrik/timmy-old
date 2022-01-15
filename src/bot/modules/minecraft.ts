@@ -1,6 +1,6 @@
 import Debug from 'debug'
 import firebase from 'firebase-admin'
-import { Channel, Client, Message } from 'discord.js'
+import { Client, Message, TextBasedChannels } from 'discord.js'
 import ngrok from 'ngrok'
 
 import MainBot from '../Bot'
@@ -39,7 +39,7 @@ class MinecraftBot extends MainBot {
       debug('init MC module')
 
       const guildsSettings = await db.listDocuments()
-      const guildsIds = this.client.guilds.cache.keyArray()
+      const guildsIds = [...this.client.guilds.cache.keys()]
 
       for (let i = 0; i < guildsIds.length; i++) {
         const guild = this.client.guilds.cache.get(guildsIds[i])
@@ -121,7 +121,7 @@ class MinecraftBot extends MainBot {
 
     try {
       const mentions = message.mentions
-      let channel: Channel = message.channel
+      let channel: TextBasedChannels = message.channel
 
       if (mentions.channels.size > 0) {
         mentions.channels.forEach((cha) => {

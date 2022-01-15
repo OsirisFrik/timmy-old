@@ -33,13 +33,6 @@ interface GuildStore {
   id: string
   name: string
   ownerId: string
-  user?: {
-    id?: string
-    username?: string
-    tag?: string
-    avatar?: string
-    disc?: string
-  }
 }
 
 interface UserStalk {

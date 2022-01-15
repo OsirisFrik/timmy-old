@@ -1,11 +1,11 @@
 import Debug from 'debug'
-import { Client, Message, VoiceChannel, Channel, TextChannel } from 'discord.js'
+import { Client, Message, VoiceChannel, Channel, TextChannel, StageChannel } from 'discord.js'
 
 const debug = Debug('app:bot:main')
 
 class MainBot {
   public client: Client
-  public voiceChannel: VoiceChannel | null = null
+  public voiceChannel: VoiceChannel | StageChannel | null = null
 
   constructor(client: Client) {
     this.client = client
@@ -29,10 +29,8 @@ class MainBot {
     }
   }
 
-  removeMessage(message: Message, timeout: number = 500): void {
-    message.delete({
-      timeout
-    })
+  removeMessage(message: Message): void {
+    message.delete()
   }
 
   disconnectVoice(): void {
@@ -43,7 +41,7 @@ class MainBot {
   }
 
   isVoiceCannel(channel: Channel): channel is VoiceChannel {
-    return channel.type === 'voice'
+    return channel.type === 'GUILD_VOICE'
   }
 
   isTextChannel(channel: Channel | any): channel is TextChannel {

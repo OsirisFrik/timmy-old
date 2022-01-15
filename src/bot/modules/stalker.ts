@@ -122,7 +122,7 @@ class Stalker extends MainBot {
   }
 
   async checkConnection(id: string): Promise<void> {
-    this.client.channels.cache.filter((channel) => channel.type === 'voice')
+    this.client.channels.cache.filter((channel) => channel.type === 'GUILD_VOICE')
       .forEach((channel) => {
         if (this.isVoiceCannel(channel)) {
           if (channel.members.find((user) => user.id === id)) {
